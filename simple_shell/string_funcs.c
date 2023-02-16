@@ -32,21 +32,25 @@ int _strlen(char *s)
 
 char *_strdup(char *s)
 {
-	char *sptr;
-	int i;
+	char *dup, *ptr;
 
 	if (!s)
 		return (NULL);
 
 	/* allocate memory for str */
-	sptr = malloc(sizeof(char *) * _strlen(s));
+	dup = (char *)malloc(sizeof(char) * _strlen(s) + 1);
+	if (dup == NULL)
+		return ((char*) NULL);
 
-	/* assign characters from s to sptr */
-	for (i = 0; *s; i++)
+	/* copy string s */
+	ptr = dup;
+	while (*s)
 	{
-		sptr[i] = *s;
+		*ptr = *s;
 		s++;
+		ptr++;
 	}
+	*ptr = '\0';
 
-	return (sptr);
+	return (dup);
 }

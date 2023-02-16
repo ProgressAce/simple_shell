@@ -16,6 +16,6 @@ void free_buffer(char **buffer)
 		i++;
 	}
 
-	free(*buffer);
+	free(buffer);
 }
 
