@@ -22,12 +22,18 @@ int _strlen(char *s);
 char *_strdup(char *s);
 
 /* exec funcs */
-char *find_command(char *command);
-char **create_arr_strings(char *full_str, char *delim);
-int sort_cmd(char **cmd_line);
-int execute_cmd(char **cmd_line);
+char *get_path(void);
+char *standard_command(char *command);
+char **split_string(char *full_str, char *delim);
+void execute_cmd(char **cmd_line, char *argv[]);
 
 /* free_buffers */
-void free_buffer(char **buffer);
+void free_double_buff(char **buffer);
+
+
+struct shell
+{
+	int interact;
+} shell;
 
 #endif /* HSHELL */

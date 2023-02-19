@@ -1,7 +1,8 @@
 #include "main.h"
 
 /**
- * print_prompt - prints the shell prompt to stdout
+ * print_prompt - prints the shell prompt to stdout, if the shell
+ * is in interactive mode
  * @void
  *
  * Return: nothing
@@ -10,24 +11,12 @@
 void printprompt(void)
 {
 	char *prompt = "($) ";
-	int i = 0;
 
-	while (prompt[i])
-	{
-		_putchar(prompt[i]);
-		i++;
-	}
-}
+	shell.interact = 1;
 
-/**
- * _putchar - write a character to stdout
- * @c: the character to write to
- *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
- */
+	if ((isatty(STDIN_FILENO) == 1) && (isatty(STDOUT_FILENO) == 1))
+		shell.interact = 0;
 
-int _putchar(char c)
-{
-	return (write(STDOUT_FILENO, &c, 1));
+	if (shell.interact)
+		write(STDOUT_FILENO, prompt, 4);
 }
