@@ -7,7 +7,7 @@
  * Return: the PATH's value
  */
 
-char *get_path(void)
+char *get_env_path(void)
 {
 	int pos = 0;
 	char *path = NULL;
@@ -32,29 +32,58 @@ char *get_path(void)
 }
 
 /**
- * standard_command - looks for an executable in the current PATH variable
+ * find_path - search for the file for the given command and get its path
+ * @command: the name of the command
+ *
+ * Return: the path to the command's file
+ */
+
+char *find_path(char *command)
+{
+	char *path;
+
+	if (command == NULL)
+		return (NULL);
+
+	if (command[0] == '/')
+		return (command);
+
+	if (shell.interact)
+	{
+		path = builtin_cmd(command);
+
+		if (path == NULL)
+			path = standard_cmd(command);
+	}
+	else
+		path = standard_cmd(command);
+
+	return (path);
+}
+
+/**
+ * builtin_cmd - looks for the command in the list of built-in commands
+ * for this simple shell.
+ * @command: the command
+ *
+ * Return: the found built-in command name
+ */
+
+char *builtin_cmd(char *command)
+{
+
+}
+
+
+/**
+ * standard_cmd - looks for an executable in the current PATH variable
  * @cmd: the command to look for
  *
  * Return: the path to the executable file containing for execution of command
  * Or NULL, if executable file not found
  */
 
-/*char *give_path(char *command)
-{
-	char *cmd_path;*/
-
-	/*if command[0] == '/' then cmd_path = command*/
-
-/*	cmd_path = command;
-	if (stat(cmd_path, &st) == 0)
-	{
-		puts("entered command exists -> sending path");confirmation*/
-/*		return (cmd_path);
-	}
-	return (NULL);
-}*/
-
-char *standard_command(char *command)
+char *standard_cmd(char *command)
 {
 	char **arr_path;
 	char *path, *search_str, cmd[15] = "/";
@@ -109,9 +138,10 @@ char **split_string(char *str, char *delim)
 	char *str_copy, *str_part;
 	int i, str_count = 0;
 
-	/* NEED TO CHECK IF SUCCESSFUL */
 	str[_strlen(str) - 1] = '\0';
-	str_copy = _strdup(str); /*NEED TO FREE*/
+	str_copy = _strdup(str); /* Need to Free*/
+	if (str_copy == NULL)
+		return (NULL);
 
 	str_part = strtok(str_copy, delim);
 	while (str_part)
@@ -124,7 +154,7 @@ char **split_string(char *str, char *delim)
 	str_part = strtok(str, delim);
 	for (i = 0; i < str_count; i++)
 	{
-		arr_str[i] = _strdup(str_part); /*malloc(sizeof(char) * _strlen());*/
+		arr_str[i] = _strdup(str_part);
 		if (arr_str[i] == NULL)
 		{
 			free(str_copy);
@@ -132,7 +162,7 @@ char **split_string(char *str, char *delim)
 			return (NULL);
 		}
 
-		str_part = strtok(NULL, delim); /*possible memory allocation problem*/
+		str_part = strtok(NULL, delim);
 	}
 	arr_str[i] = NULL;
 
