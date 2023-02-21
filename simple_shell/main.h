@@ -22,10 +22,16 @@ int _strlen(char *s);
 char *_strdup(char *s);
 
 /* exec funcs */
-char *get_path(void);
-char *standard_command(char *command);
+char *get_env_path(void);
+char *find_path(char *command);
+char *builtin_cmd(char **command);
+char *standard_cmd(char *command);
 char **split_string(char *full_str, char *delim);
-void execute_cmd(char **cmd_line, char *argv[]);
+void execute_cmd(char *pathname, char **cmd_line);
+
+/* checker funcs */
+void getline_check(int chars);
+int permission_check(char *pathname);
 
 /* free_buffers */
 void free_double_buff(char **buffer);
