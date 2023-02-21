@@ -1,8 +1,7 @@
 #include "main.h"
 
 /**
- * get_path - gets the PATH variable's value in the environment
- * @void
+ * get_path - gets the PATH variable's value from the global environment
  *
  * Return: the PATH's value
  */
@@ -11,21 +10,25 @@ char *get_env_path(void)
 {
 	int pos = 0;
 	char *path = NULL;
+	char **env = NULL;
 
-	while (*environ)
+	env = environ;
+
+	while (*env)
 	{
 		/*CREATE OWN STRNCMP*/
-		if (strncmp(*environ, "PATH=", 5) == 0)
-			path = *environ;
-
-		/* move pointer to point to the PATH'S value */
-		while(path && pos < 5)
+		if (strncmp(*env, "PATH=", 5) == 0)
 		{
-			path++;
-			pos++;
+			path = _strdup(*env);
+			/* move pointer to point to the PATH'S value */
+			while(*path && pos < 5)
+			{
+				path++;
+				pos++;
+			}
+			break;
 		}
-
-		environ++;
+		env++;
 	}
 
 	return (path);
@@ -110,9 +113,10 @@ char *standard_cmd(char *command)
 	/*create own strcat*/
 	strcat(cmd, command);
 
+	printf("getenv(PATH): %s\n", getenv("PATH"));/*test*/
 	/* get PATH value */
 	path = get_env_path();
-	printf("env_path;=: %s\n", path);
+	printf("env_path: %s\n", path);
 
 	/* separate the path directories */
 	arr_path = split_string(path, ":"); /* FREE */
@@ -136,6 +140,7 @@ char *standard_cmd(char *command)
 		}
 	}
 
+	free(path);
 	free(search_str);
 	free_double_buff(arr_path);
 	return (NULL);
