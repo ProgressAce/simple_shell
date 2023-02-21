@@ -21,7 +21,7 @@ char *get_env_path(void)
 		{
 			path = _strdup(*env);
 			/* move pointer to point to the PATH'S value */
-			while(*path && pos < 5)
+			while (*path && pos < 5)
 			{
 				path++;
 				pos++;
@@ -44,7 +44,9 @@ char *get_env_path(void)
 
 char *find_path(char *command)
 {
-	char *path;
+	char *path, *non_interact_cmd = NULL;
+	char *f;
+	ssize_t bytes;
 
 	if (command == NULL)
 		return (NULL);
@@ -61,7 +63,7 @@ char *find_path(char *command)
 /**
  * builtin_cmd - looks for the command in the list of built-in commands
  * for this simple shell.
- * @command: the command
+ * @command: the command line in the form of an array of strings
  *
  * Return: the found built-in command name
  */
@@ -81,7 +83,7 @@ char *builtin_cmd(char **command)
 		index++;
 	}
 
-	switch(index)
+	switch (index)
 	{
 		case 0:
 			write(STDOUT_FILENO, "\n", 1);
@@ -97,7 +99,7 @@ char *builtin_cmd(char **command)
 
 /**
  * standard_cmd - looks for an executable in the current PATH variable
- * @cmd: the command to look for
+ * @command: the command to look for
  *
  * Return: the path to the executable file containing for execution of command
  * Or NULL, if executable file not found
@@ -197,6 +199,7 @@ char **split_string(char *str, char *delim)
 
 /**
  * execute_cmd - executes the passed command using execve.
+ * @pathname: the full path of a file
  * @cmd_line: array of pointers to strings, together containing
  * the full command line.
  *

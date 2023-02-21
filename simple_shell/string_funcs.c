@@ -40,7 +40,7 @@ char *_strdup(char *s)
 	/* allocate memory for str */
 	dup = (char *)malloc(sizeof(char) * _strlen(s) + 1);
 	if (dup == NULL)
-		return ((char*) NULL);
+		return ((char *) NULL);
 
 	/* copy string s */
 	ptr = dup;
