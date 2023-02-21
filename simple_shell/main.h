@@ -21,6 +21,10 @@ int _putchar(char c);
 int _strlen(char *s);
 char *_strdup(char *s);
 
+/* non_interactive funcs*/
+char **get_stdin_cmdline(void);
+char *get_stdin_cmd(void);
+
 /* exec funcs */
 char *get_env_path(void);
 char *find_path(char *command);
