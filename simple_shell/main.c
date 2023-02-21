@@ -6,22 +6,29 @@
  * Return: 0(Success)
  */
 
-int main(int argc, char **argv)
+int main(__attribute__((unused)) int argc, char **argv)
 {
 	char **cmd_line = NULL;
-	char *line = NULL;
+	char *line = NULL, *path = NULL;
 	ssize_t chars;
 	size_t n = 0;
+	int line_num = 0, permission = -1;
 
 	while (1)
 	{
          	free_double_buff(cmd_line);
+		free(path);
 		printprompt();
 
-
 		chars = getline(&line, &n, stdin);
-		getline_check(chars);
+		printf("getline pass\n");/*test*/
+		if (chars == -1)
+			break;
+		if (chars == 1)
+			continue;
+		line_num++;
 		cmd_line = split_string(line, " "); /*free memory*/
+		printf("split_string pass\n");/*test*/
 
 		if (cmd_line == NULL || *cmd_line == NULL || **cmd_line == '\0')
 		{
@@ -29,19 +36,26 @@ int main(int argc, char **argv)
 			continue;
 		}
 
+		if (builtin_cmd(cmd_line) != NULL)
+			continue;
+		printf("builtin_cmd pass\n");/*test*/
+		printf("cmd_line[0]: %s\n", cmd_line[0]);/*test*/
 		path = find_path(cmd_line[0]);
-		permission = permision_check(path);
-
-		if (permission == -1)
-			perror(argv[0]);
+		printf("find_path pass\n");/*test*/
+		if (path != NULL)
+			permission = permission_check(path);
+		printf("permission_check pass\n");/*test*/
+		if (path != NULL && permission == 0)
+			execute_cmd(path, cmd_line);
 		else
-			execute_cmd(cmd_line, argv);
+			perror( strcat(argv[0], cmd_line[0]) );
 
-/*		if (shell.interact != 1)
-			_exit();*/
+		printf("execute_cmd pass\n");/*test*/
+		if (shell.interact == 0)
+			exit(42);
 	}
-
-
+	write(STDOUT_FILENO, "\n", 1);
+	free(line);
 
 	return (0);
 }

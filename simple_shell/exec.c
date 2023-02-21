@@ -31,6 +31,7 @@ char *get_env_path(void)
 	return (path);
 }
 
+
 /**
  * find_path - search for the file for the given command and get its path
  * @command: the name of the command
@@ -48,18 +49,11 @@ char *find_path(char *command)
 	if (command[0] == '/')
 		return (command);
 
-	if (shell.interact)
-	{
-		path = builtin_cmd(command);
-
-		if (path == NULL)
-			path = standard_cmd(command);
-	}
-	else
-		path = standard_cmd(command);
+	path = standard_cmd(command);
 
 	return (path);
 }
+
 
 /**
  * builtin_cmd - looks for the command in the list of built-in commands
@@ -69,9 +63,32 @@ char *find_path(char *command)
  * Return: the found built-in command name
  */
 
-char *builtin_cmd(char *command)
+char *builtin_cmd(char **command)
 {
+	char *list_of_builtins[5] = {
+		"exit", "env", NULL
+	};
+	int index = 0;
 
+	while (list_of_builtins[index])
+	{
+		if (strcmp(command[0], list_of_builtins[index]) == 0)
+			break;
+
+		index++;
+	}
+
+	switch(index)
+	{
+		case 0:
+			write(STDOUT_FILENO, "\n", 1);
+			exit(0);
+
+	/*	case 1:
+			env();*/
+	}
+
+	return (list_of_builtins[index]);
 }
 
 
@@ -90,18 +107,20 @@ char *standard_cmd(char *command)
 	int i;
 	struct stat st;
 
-
 	/*create own strcat*/
 	strcat(cmd, command);
 
 	/* get PATH value */
-	path = get_path();
+	path = get_env_path();
+	printf("env_path;=: %s\n", path);
 
 	/* separate the path directories */
-	arr_path = split_string(path, ":");
+	arr_path = split_string(path, ":"); /* FREE */
+	if (arr_path == NULL)
+		return (NULL);
+	printf("arr_path[0]: %s\narr_path[1]: %s\n", arr_path[0], arr_path[1]);/*test*/
 
-	/* for containing the command path (path + command) */
-	search_str = malloc(sizeof(char) * (50 + _strlen(cmd)));
+	search_str = malloc(sizeof(char) * (20 + _strlen(cmd)));
 
 	/* change the string directory path to search for executable file */
 	for (i = 0; arr_path[i] != NULL; i++)
@@ -113,15 +132,15 @@ char *standard_cmd(char *command)
 		if (stat(search_str, &st) == 0)
 		{
 			free_double_buff(arr_path);
-			return (search_str); /*FREE IN EXECUTE_CMD*/
+			return (search_str); /* FREE */
 		}
 	}
 
-	perror(command);
 	free(search_str);
 	free_double_buff(arr_path);
 	return (NULL);
 }
+
 
 /**
  * split_string - splits the string up into smaller parts according to a specific
@@ -149,10 +168,11 @@ char **split_string(char *str, char *delim)
 		str_count++;
 		str_part = strtok(NULL, delim);
 	}
-	arr_str = malloc(sizeof(char *) * str_count);
+	arr_str = malloc(sizeof(char *) * (str_count + 1));
 
+	i = 0;
 	str_part = strtok(str, delim);
-	for (i = 0; i < str_count; i++)
+	while (str_part)
 	{
 		arr_str[i] = _strdup(str_part);
 		if (arr_str[i] == NULL)
@@ -161,8 +181,8 @@ char **split_string(char *str, char *delim)
 			free_double_buff(arr_str);
 			return (NULL);
 		}
-
 		str_part = strtok(NULL, delim);
+		i++;
 	}
 	arr_str[i] = NULL;
 
@@ -178,23 +198,14 @@ char **split_string(char *str, char *delim)
  * Return: nothing
  */
 
-void execute_cmd(char **cmd_line, char *argv[])
+void execute_cmd(char *pathname, char **cmd_line)
 {
 	char *command = NULL;
 	pid_t pid;
 	int status;
 
-/*	if (shell.interact)
-	{*/
-/*		command = builtin_command(cmd_line[0]);*/
+	command = pathname;
 
-/*		if (!command)*/
-			command = standard_command(cmd_line[0]);
-/*	}
-	else
-		command = standard_command(cmd_line[0]);*/
-
-	/* print error message with name of program argv[0] */
 	if (command != NULL)
 	{
 		pid = fork();
@@ -204,13 +215,9 @@ void execute_cmd(char **cmd_line, char *argv[])
 		if (pid == 0)
 		{
 			execve(command, cmd_line, NULL);
-			/*perror(cmd_line[0]);*/
 			exit(1);
 		}
 		else
 			wait(&status);
 	}
-	else
-		printf("%s: Command not found\n", argv[0]);
-	free(command); /* free created path */
 }
