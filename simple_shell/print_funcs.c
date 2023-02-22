@@ -31,7 +31,7 @@ void printprompt(void)
 
 void printcommand_error(char *shell_name, char *command) /*int line_num*/
 {
-	char *error_msg;
+	char *error_msg = NULL;
 
 	strcat(error_msg, shell_name);
 	strcat(error_msg, ": ");

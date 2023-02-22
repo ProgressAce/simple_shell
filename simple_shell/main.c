@@ -10,8 +10,7 @@
 
 int main(__attribute__((unused)) int argc, char **argv)
 {
-	char **cmd_line = NULL;
-	char *line = NULL, *path = NULL;
+	char **cmd_line = NULL, *line = NULL, *path = NULL;
 	ssize_t chars;
 	size_t n = 0;
 	int line_num = 0, permission = -1;
@@ -30,11 +29,8 @@ int main(__attribute__((unused)) int argc, char **argv)
 			continue;
 		line_num++;
 
-		/* for non-interactive shell */
-		if (shell.interact == 0)
-			cmd_line = get_stdin_cmdline();
-		else
-			cmd_line = split_string(line, " "); /*free memory*/
+		/* for interactive and non-interactive shell */
+		cmd_line = split_string(line, " "); /*free memory*/
 		printf("split_string pass\n");/*test*/
 
 		if (cmd_line == NULL || *cmd_line == NULL || **cmd_line == '\0')
@@ -55,7 +51,7 @@ int main(__attribute__((unused)) int argc, char **argv)
 		if (path != NULL && permission == 0)
 			execute_cmd(path, cmd_line);
 		else
-			perror(strcat(argv[0], cmd_line[0]));
+			perror(argv[0]);
 
 		printf("execute_cmd pass\n");/*test*/
 		if (shell.interact == 0)

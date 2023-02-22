@@ -12,18 +12,17 @@ extern char **environ;
 #include <sys/stat.h> /*stat*/
 #include <sys/types.h>
 #include <errno.h> /*perror*/
+#include <fcntl.h>
 
 /* print_funs */
 void printprompt(void);
-int _putchar(char c);
 
 /* string_funcs */
 int _strlen(char *s);
 char *_strdup(char *s);
-
-/* non_interactive funcs*/
-char **get_stdin_cmdline(void);
-char *get_stdin_cmd(void);
+char *_strcpy(char *dest, char *src);
+char *_strcat(char *dest, char *src);
+int _strncmp(char *s1, char *s2, int size);
 
 /* exec funcs */
 char *get_env_path(void);

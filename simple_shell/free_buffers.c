@@ -21,6 +21,6 @@ void free_double_buff(char **buffer)
 		i++;
 	}
 
-	free(buffer);
+	buffer = NULL;
 }
 
