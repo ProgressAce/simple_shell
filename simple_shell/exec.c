@@ -17,11 +17,11 @@ char *get_env_path(void)
 	while (*env)
 	{
 		/*CREATE OWN STRNCMP*/
-		if (strncmp(*env, "PATH=", 5) == 0)
+		if (_strncmp(*env, "PATH=", 5) == 0)
 		{
 			path = _strdup(*env);
 			/* move pointer to point to the PATH'S value */
-			while(*path && pos < 5)
+			while (*path && pos < 5)
 			{
 				path++;
 				pos++;
@@ -61,7 +61,7 @@ char *find_path(char *command)
 /**
  * builtin_cmd - looks for the command in the list of built-in commands
  * for this simple shell.
- * @command: the command
+ * @command: the command line in the form of an array of strings
  *
  * Return: the found built-in command name
  */
@@ -69,26 +69,33 @@ char *find_path(char *command)
 char *builtin_cmd(char **command)
 {
 	char *list_of_builtins[5] = {
-		"exit", "env", NULL
+		"exit", "env", "setenv", "unsetenv", NULL
 	};
-	int index = 0;
+	int index = 0, length;
 
 	while (list_of_builtins[index])
 	{
-		if (strcmp(command[0], list_of_builtins[index]) == 0)
+		length = _strlen(list_of_builtins[index]);
+		if (_strncmp(command[0], list_of_builtins[index], length) == 0)
 			break;
 
 		index++;
 	}
 
-	switch(index)
+	switch (index)
 	{
 		case 0:
-			write(STDOUT_FILENO, "\n", 1);
 			exit(0);
 
 	/*	case 1:
 			env();*/
+
+	/*	case 2:
+			setenv(...);
+
+		case 3:
+			unsetenv(...);*/
+
 	}
 
 	return (list_of_builtins[index]);
@@ -97,7 +104,7 @@ char *builtin_cmd(char **command)
 
 /**
  * standard_cmd - looks for an executable in the current PATH variable
- * @cmd: the command to look for
+ * @command: the command to look for
  *
  * Return: the path to the executable file containing for execution of command
  * Or NULL, if executable file not found
@@ -107,32 +114,27 @@ char *standard_cmd(char *command)
 {
 	char **arr_path;
 	char *path, *search_str, cmd[15] = "/";
-	int i;
+	unsigned int i = 0;
 	struct stat st;
 
-	/*create own strcat*/
-	strcat(cmd, command);
+	_strcat(cmd, command);
 
-	printf("getenv(PATH): %s\n", getenv("PATH"));/*test*/
 	/* get PATH value */
 	path = get_env_path();
-	printf("env_path: %s\n", path);
 
 	/* separate the path directories */
 	arr_path = split_string(path, ":"); /* FREE */
 	if (arr_path == NULL)
 		return (NULL);
-	printf("arr_path[0]: %s\narr_path[1]: %s\n", arr_path[0], arr_path[1]);/*test*/
 
-	search_str = malloc(sizeof(char) * (20 + _strlen(cmd)));
+	search_str = malloc(sizeof(char) * (20 + _strlen(cmd))); /* FREE */
 
 	/* change the string directory path to search for executable file */
 	for (i = 0; arr_path[i] != NULL; i++)
 	{
-		strcpy(search_str, arr_path[i]);
-		strcat(search_str, cmd);
+		_strcpy(search_str, arr_path[i]);
+		_strcat(search_str, cmd);
 
-		printf("search_str: %s\n", search_str);/*test*/
 		if (stat(search_str, &st) == 0)
 		{
 			free_double_buff(arr_path);
@@ -140,7 +142,6 @@ char *standard_cmd(char *command)
 		}
 	}
 
-	free(path);
 	free(search_str);
 	free_double_buff(arr_path);
 	return (NULL);
@@ -197,6 +198,7 @@ char **split_string(char *str, char *delim)
 
 /**
  * execute_cmd - executes the passed command using execve.
+ * @pathname: the full path of a file
  * @cmd_line: array of pointers to strings, together containing
  * the full command line.
  *
@@ -220,6 +222,7 @@ void execute_cmd(char *pathname, char **cmd_line)
 		if (pid == 0)
 		{
 			execve(command, cmd_line, NULL);
+			perror(command);
 			exit(1);
 		}
 		else

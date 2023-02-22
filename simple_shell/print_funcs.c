@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * print_prompt - prints the shell prompt to stdout, if the shell
+ * printprompt - prints the shell prompt to stdout, if the shell
  * is in interactive mode
  * @void
  *
@@ -23,9 +23,18 @@ void printprompt(void)
 
 
 /**
+ * printcommand_error - write an error message to stdout if the
+ * command was not found.
  *
- *
- *
+ * Return: nothing
  */
 
-/*void printcommand_error(void);*/
+void printcommand_error(char *shell_name, char *command) /*int line_num*/
+{
+	char *error_msg = NULL;
+
+	strcat(error_msg, shell_name);
+	strcat(error_msg, ": ");
+	strcat(error_msg, command);
+	write(STDOUT_FILENO, error_msg, _strlen(error_msg));
+}
