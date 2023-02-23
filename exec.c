@@ -1,41 +1,6 @@
 #include "main.h"
 
 /**
- * get_path - gets the PATH variable's value from the global environment
- *
- * Return: the PATH's value
- */
-
-char *get_env_path(void)
-{
-	int pos = 0;
-	char *path = NULL;
-	char **env = NULL;
-
-	env = environ;
-
-	while (*env)
-	{
-		/*CREATE OWN STRNCMP*/
-		if (_strncmp(*env, "PATH=", 5) == 0)
-		{
-			path = _strdup(*env);
-			/* move pointer to point to the PATH'S value */
-			while (*path && pos < 5)
-			{
-				path++;
-				pos++;
-			}
-			break;
-		}
-		env++;
-	}
-
-	return (path);
-}
-
-
-/**
  * find_path - search for the file for the given command and get its path
  * @command: the name of the command
  *
@@ -87,8 +52,8 @@ char *builtin_cmd(char **command)
 		case 0:
 			exit(0);
 
-	/*	case 1:
-			env();*/
+		case 1:
+			env();
 
 	/*	case 2:
 			setenv(...);

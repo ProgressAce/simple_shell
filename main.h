@@ -24,8 +24,11 @@ char *_strcpy(char *dest, char *src);
 char *_strcat(char *dest, char *src);
 int _strncmp(char *s1, char *s2, int size);
 
-/* exec funcs */
+/* env funcs */
 char *get_env_path(void);
+void env(void);
+
+/* exec funcs */
 char *find_path(char *command);
 char *builtin_cmd(char **command);
 char *standard_cmd(char *command);
