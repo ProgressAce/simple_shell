@@ -1,15 +1,16 @@
-#include "main.h"
+#include "shell.h"
 
 /**
-  * get_environ - returns the string array copy of the environ
-  * @info: structure containing potential arguments.
-  * Return: 0 always
-  */
+ * get_environ - returns the string array copy of our environ
+ * @info: Structure containing potential arguments. Used to maintain
+ *          constant function prototype.
+ * Return: Always 0
+ */
 char **get_environ(info_t *info)
 {
-	if (!info->environ = list_to_strings(info->env)
+	if (!info->environ || info->env_changed)
 	{
-		info->environ = lsit_to_strings(info->env);
+		info->environ = list_to_strings(info->env);
 		info->env_changed = 0;
 	}
 
@@ -17,11 +18,12 @@ char **get_environ(info_t *info)
 }
 
 /**
-  * _unsetenv - remove an environment variable
-  * @info: structure containig potential arguments.
-  * Return: 1 on delete, 0 otherwise
-  * @var: the string env var propety
-  */
+ * _unsetenv - Remove an environment variable
+ * @info: Structure containing potential arguments. Used to maintain
+ *        constant function prototype.
+ *  Return: 1 on delete, 0 otherwise
+ * @var: the string env var property
+ */
 int _unsetenv(info_t *info, char *var)
 {
 	list_t *node = info->env;
@@ -48,12 +50,14 @@ int _unsetenv(info_t *info, char *var)
 }
 
 /**
-  * _setenv - initialise new environment variable
-  * @info: structure containing potential arguments
-  * @var: string env variable property
-  * @value: the string env var value
-  * Return: 0 always
-  */
+ * _setenv - Initialize a new environment variable,
+ *             or modify an existing one
+ * @info: Structure containing potential arguments. Used to maintain
+ *        constant function prototype.
+ * @var: the string env var property
+ * @value: the string env var value
+ *  Return: Always 0
+ */
 int _setenv(info_t *info, char *var, char *value)
 {
 	char *buf = NULL;
@@ -87,4 +91,3 @@ int _setenv(info_t *info, char *var, char *value)
 	info->env_changed = 1;
 	return (0);
 }
-
