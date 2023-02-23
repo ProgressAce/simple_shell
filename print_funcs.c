@@ -25,6 +25,8 @@ void printprompt(void)
 /**
  * printcommand_error - write an error message to stdout if the
  * command was not found.
+ * @shell_name: name of the program
+ * @command: the entered command
  *
  * Return: nothing
  */

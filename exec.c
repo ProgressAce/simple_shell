@@ -54,13 +54,13 @@ char *builtin_cmd(char **command)
 
 		case 1:
 			env();
-
-	/*	case 2:
-			setenv(...);
-
-		case 3:
-			unsetenv(...);*/
-
+/*
+ *		case 2:
+ *			setenv(...);
+ *
+ *		case 3:
+ *			unsetenv(...);
+ */
 	}
 
 	return (list_of_builtins[index]);
@@ -114,7 +114,7 @@ char *standard_cmd(char *command)
 
 
 /**
- * split_string - splits the string up into smaller parts according to a specific
+ * split_string - splits the string up into smaller parts according to a
  * sequence of characters and returns all the parts as an array of pointers
  * @str: the string to split
  * @delim: the sequence of the characters

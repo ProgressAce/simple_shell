@@ -130,12 +130,14 @@ char *_strcat(char *dest, char *src)
 
 
 /**
- * _strcmp - compares the characters of two strings,
- * exactly like strcmp function.
+ * _strncmp - compares the characters of two strings,
+ * and returns 0 if the comparison is equal.
  * @s1: first string
  * @s2: second string
+ * @size: the number of bytes of s2 to compare to
  *
- * Return: the first difference between characters
+ * Return: 0 if the comparison is equal, or
+ * a number besides 0 if they are not equal
  */
 
 int _strncmp(char *s1, char *s2, int size)

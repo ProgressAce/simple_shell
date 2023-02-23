@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * get_path - gets the PATH variable's value from the global environment
+ * get_env_path - gets the PATH variable's value from the global environment
  *
  * Return: the PATH's value
  */
