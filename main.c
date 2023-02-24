@@ -15,6 +15,7 @@ int main(__attribute__((unused)) int argc, char **argv)
 	size_t n = 0;
 	int line_num = 0, permission = -1;
 
+	signal(SIGINT, handle_sigint); /* handle Ctrl+c */
 	while (1)
 	{
 		free_double_buff(cmd_line);
@@ -23,7 +24,7 @@ int main(__attribute__((unused)) int argc, char **argv)
 		chars = getline(&line, &n, stdin);
 		if (chars == -1)
 			break;
-		if (chars == 1)
+		if (line[0] == '\n')
 			continue;
 		line_num++;
 		/* for interactive and non-interactive shell */
@@ -47,7 +48,8 @@ int main(__attribute__((unused)) int argc, char **argv)
 			exit(42);
 	}
 	write(STDOUT_FILENO, "\n", 1);
-	free(line);
+	if (chars != -1)
+		free(line);
 
 	return (0);
 }

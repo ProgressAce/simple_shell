@@ -17,6 +17,9 @@ extern char **environ;
 /* print_funs */
 void printprompt(void);
 
+/* handle_signal */
+void handle-sigint(int signum);
+
 /* string_funcs */
 int _strlen(char *s);
 char *_strdup(char *s);
