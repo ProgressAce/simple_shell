@@ -32,7 +32,7 @@ int _strlen(char *s)
 
 char *_strdup(char *s)
 {
-	char *dup, *ptr;
+	char *dup = NULL, *ptr = NULL;
 
 	if (!s)
 		return (NULL);

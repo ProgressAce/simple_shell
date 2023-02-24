@@ -9,7 +9,7 @@
 
 char *find_path(char *command)
 {
-	char *path;
+	char *path = NULL;
 
 	if (command == NULL)
 		return (NULL);
@@ -77,8 +77,8 @@ char *builtin_cmd(char **command)
 
 char *standard_cmd(char *command)
 {
-	char **arr_path;
-	char *path, *search_str, cmd[15] = "/";
+	char **arr_path = NULL;
+	char *path = NULL, *cmd_path = NULL, cmd[15] = "/";
 	unsigned int i = 0;
 	struct stat st;
 
@@ -92,22 +92,22 @@ char *standard_cmd(char *command)
 	if (arr_path == NULL)
 		return (NULL);
 
-	search_str = malloc(sizeof(char) * (20 + _strlen(cmd))); /* FREE */
+	cmd_path = malloc(sizeof(char) * (20 + _strlen(cmd))); /* FREE */
 
 	/* change the string directory path to search for executable file */
 	for (i = 0; arr_path[i] != NULL; i++)
 	{
-		_strcpy(search_str, arr_path[i]);
-		_strcat(search_str, cmd);
+		_strcpy(cmd_path, arr_path[i]);
+		_strcat(cmd_path, cmd);
 
-		if (stat(search_str, &st) == 0)
+		if (stat(cmd_path, &st) == 0)
 		{
 			free_double_buff(arr_path);
-			return (search_str); /* FREE */
+			return (cmd_path); /* FREE */
 		}
 	}
 
-	free(search_str);
+	free(cmd_path);
 	free_double_buff(arr_path);
 	return (NULL);
 }
@@ -124,8 +124,8 @@ char *standard_cmd(char *command)
 
 char **split_string(char *str, char *delim)
 {
-	char **arr_str;
-	char *str_copy, *str_part;
+	char **arr_str = NULL;
+	char *str_copy = NULL, *str_part = NULL;
 	int i, str_count = 0;
 
 	str[_strlen(str) - 1] = '\0';
@@ -172,25 +172,26 @@ char **split_string(char *str, char *delim)
 
 void execute_cmd(char *pathname, char **cmd_line)
 {
-	char **env = environ, *command = NULL;
+	char **env = NULL, *command = NULL;
 	pid_t pid;
 	int status;
 
+	env = environ;
+
 	command = pathname;
 
-	if (command != NULL)
-	{
-		pid = fork();
-		if (pid == -1)
-			perror("fork error: ");
+	pid = fork();
+	if (pid == -1)
+		perror("fork error: ");
 
-		if (pid == 0)
-		{
-			execve(command, cmd_line, env);
-			perror(command);
-			exit(1);
-		}
-		else
-			wait(&status);
+	if (pid == 0)
+	{
+		execve(command, cmd_line, env);
+		perror(command);
+		free(command);
+		free_double_buff(cmd_line);
 	}
+	else
+		wait(&status);
 }
+

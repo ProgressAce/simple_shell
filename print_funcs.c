@@ -10,15 +10,13 @@
 
 void printprompt(void)
 {
-	char *prompt = "($) ";
-
 	shell.interact = 1;
 
 	if ((isatty(STDIN_FILENO) == 0) && (isatty(STDOUT_FILENO) == 1))
 		shell.interact = 0;
 
 	if (shell.interact == 1)
-		write(STDOUT_FILENO, prompt, 4);
+		write(STDOUT_FILENO, "($) ", 4);
 }
 
 

@@ -42,8 +42,10 @@ char *get_env_path(void)
 
 void env(void)
 {
-	char **env = environ;
+	char **env = NULL;
 	int i = 0;
+
+	env = environ;
 
 	while (env[i])
 	{

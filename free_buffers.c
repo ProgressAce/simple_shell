@@ -18,8 +18,10 @@ void free_double_buff(char **buffer)
 	while (buffer[i])
 	{
 		free(buffer[i]);
+		buffer[i] = NULL;
 		i++;
 	}
+	free(buffer);
 
 	buffer = NULL;
 }

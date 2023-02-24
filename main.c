@@ -18,22 +18,25 @@ int main(__attribute__((unused)) int argc, char **argv)
 	signal(SIGINT, handle_sigint); /* handle Ctrl+c */
 	while (1)
 	{
-		free_double_buff(cmd_line);
 		free(path);
+		free_double_buff(cmd_line);
 		printprompt();
 		chars = getline(&line, &n, stdin);
 		if (chars == -1)
 			break;
-		if (line[0] == '\n')
+		line[chars] = '\0';
+		if (chars == 1) /* only new line character entered */
+		{
+			path = NULL;
+			cmd_line = NULL;
 			continue;
+		}
 		line_num++;
+
 		/* for interactive and non-interactive shell */
 		cmd_line = split_string(line, " "); /*free memory*/
 		if (cmd_line == NULL || *cmd_line == NULL || **cmd_line == '\0')
-		{
-			perror("cmd line unsuccessful");
 			continue;
-		}
 		if (builtin_cmd(cmd_line) != NULL)
 			continue;
 		path = find_path(cmd_line[0]);
