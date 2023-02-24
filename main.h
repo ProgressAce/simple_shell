@@ -18,7 +18,7 @@ extern char **environ;
 void printprompt(void);
 
 /* handle_signal */
-void handle-sigint(int signum);
+void handle_sigint(int signum);
 
 /* string_funcs */
 int _strlen(char *s);

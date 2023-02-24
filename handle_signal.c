@@ -8,7 +8,7 @@
  * Return: nothing
  */
 
-void handle-sigint(int signum)
+void handle_sigint(int signum)
 {
 	(void) signum;
 
