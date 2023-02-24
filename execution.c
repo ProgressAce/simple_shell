@@ -50,6 +50,7 @@ char *builtin_cmd(char **command)
 	switch (index)
 	{
 		case 0:
+			free_double_buff(command);
 			exit(0);
 
 		case 1:
@@ -78,10 +79,12 @@ char *builtin_cmd(char **command)
 char *standard_cmd(char *command)
 {
 	char **arr_path = NULL;
-	char *path = NULL, *cmd_path = NULL, cmd[15] = "/";
+	char *path = NULL, *cmd_path = NULL, *cmd = NULL;
 	unsigned int i = 0;
 	struct stat st;
 
+	cmd = malloc(sizeof(char) * _strlen(command));
+	cmd[0] = '/';
 	_strcat(cmd, command);
 
 	/* get PATH value */
@@ -107,6 +110,7 @@ char *standard_cmd(char *command)
 		}
 	}
 
+	free(cmd);
 	free(cmd_path);
 	free_double_buff(arr_path);
 	return (NULL);
@@ -187,11 +191,14 @@ void execute_cmd(char *pathname, char **cmd_line)
 	if (pid == 0)
 	{
 		execve(command, cmd_line, env);
-		perror(command);
 		free(command);
 		free_double_buff(cmd_line);
+		exit(98);
 	}
 	else
 		wait(&status);
+
+	command = NULL;
+	cmd_line = NULL;
 }
 

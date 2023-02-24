@@ -2,7 +2,9 @@
 #define HSHELL
 
 extern char **environ;
+extern __sighandler_t signal(int __sig, __sighandler_t __handler);
 
+typedef void (*sighandler_t)(int);
 /* libraries */
 #include <unistd.h> /*fork, execve*/
 #include <stdio.h> /*NULL*/
@@ -12,7 +14,7 @@ extern char **environ;
 #include <sys/stat.h> /*stat*/
 #include <sys/types.h>
 #include <errno.h> /*perror*/
-#include <fcntl.h>
+#include <signal.h>
 
 /* print_funs */
 void printprompt(void);

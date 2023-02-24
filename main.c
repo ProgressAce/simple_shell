@@ -32,8 +32,6 @@ int main(__attribute__((unused)) int argc, char **argv)
 			continue;
 		}
 		line_num++;
-
-		/* for interactive and non-interactive shell */
 		cmd_line = split_string(line, " "); /*free memory*/
 		if (cmd_line == NULL || *cmd_line == NULL || **cmd_line == '\0')
 			continue;
