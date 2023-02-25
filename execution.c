@@ -85,6 +85,7 @@ char *standard_cmd(char *command)
 
 	cmd = malloc(sizeof(char) * _strlen(command));
 	cmd[0] = '/';
+	cmd[1] = '\0';
 	_strcat(cmd, command);
 
 	/* get PATH value */

@@ -15,7 +15,6 @@ int main(__attribute__((unused)) int argc, char **argv)
 	size_t n = 0;
 	int line_num = 0, permission = -1;
 
-	signal(SIGINT, handle_sigint); /* handle Ctrl+c */
 	while (1)
 	{
 		free(path);
@@ -31,6 +30,8 @@ int main(__attribute__((unused)) int argc, char **argv)
 			cmd_line = NULL;
 			continue;
 		}
+		if (signal(SIGINT, handle_sigint)) /* handle Ctrl+c */
+			continue;
 		line_num++;
 		cmd_line = split_string(line, " "); /*free memory*/
 		if (cmd_line == NULL || *cmd_line == NULL || **cmd_line == '\0')

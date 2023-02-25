@@ -1,10 +1,12 @@
 #ifndef HSHELL
 #define HSHELL
 
-extern char **environ;
-extern __sighandler_t signal(int __sig, __sighandler_t __handler);
-
 typedef void (*sighandler_t)(int);
+
+extern char **environ;
+sighandler_t signal(int signum, sighandler_t handler);
+
+
 /* libraries */
 #include <unistd.h> /*fork, execve*/
 #include <stdio.h> /*NULL*/
