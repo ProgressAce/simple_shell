@@ -16,7 +16,7 @@ void printprompt(void)
 		shell.interact = 0;
 
 	if (shell.interact == 1)
-		write(STDOUT_FILENO, "($) ", 4);
+		write(STDOUT_FILENO, "$ ", 2);
 }
 
 
